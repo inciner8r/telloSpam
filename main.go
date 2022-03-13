@@ -8,8 +8,30 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
+func send(link string, responseBody *bytes.Buffer) {
+	fmt.Println(link)
+	fmt.Println(responseBody)
+	resp, err := http.Post(link, "application/json", responseBody)
+	if err != nil {
+		log.Fatalf("An Error Occured %v", err)
+	}
+	defer resp.Body.Close()
+	//Read the response body
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln("errrror :", err)
+	}
+	sb := string(body)
+	log.Println(sb)
+	if len(sb) > 0 {
+		log.Println("error hui", len(sb))
+		time.Sleep(3 * time.Second)
+	}
+	time.Sleep(2 * time.Second)
+}
 func main() {
 	type postReq struct {
 		IsInstagramInAppBrowser bool   `json:"isInstagramInAppBrowser"`
@@ -21,27 +43,13 @@ func main() {
 	link := "https://api.tellonym.me/tells/new"
 
 	for i := 0; i < 99; i++ {
-		message := "testing spam" + strconv.Itoa(i)
+		message := "testing spam lulul" + strconv.Itoa(i)
 
 		postBody, err := json.Marshal(postReq{IsInstagramInAppBrowser: false, IsSenderRevealed: false, Tell: message, UserId: 82491097, Limit: 99})
 		if err != nil {
 			log.Fatalf("An Error Occured in marshal. %v", err)
 		}
-
 		responseBody := bytes.NewBuffer(postBody)
-		resp, err := http.Post(link, "application/json", responseBody)
-		if err != nil {
-			log.Fatalf("An Error Occured %v", err)
-		}
-		defer resp.Body.Close()
-		fmt.Printf("req no %v", i)
-		//Read the response body
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		sb := string(body)
-		log.Println(sb)
-
+		send(link, responseBody)
 	}
 }
