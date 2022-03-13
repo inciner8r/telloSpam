@@ -11,9 +11,7 @@ import (
 )
 
 func send(link string, responseBody *bytes.Buffer) {
-	tempres := responseBody
-	templink := link
-	resp, err := http.Post(templink, "application/json", tempres)
+	resp, err := http.Post(link, "application/json", responseBody)
 	if err != nil {
 		log.Fatalf("An Error Occured %v", err)
 	}
@@ -27,10 +25,10 @@ func send(link string, responseBody *bytes.Buffer) {
 	log.Println(sb)
 	if len(sb) > 0 {
 		log.Println("error hui", len(sb))
-		time.Sleep(3 * time.Second)
-		send(templink, tempres)
+		time.Sleep(6 * time.Second)
+		http.Post(link, "application/json", responseBody)
 	} else {
-		time.Sleep(2 * time.Second)
+		time.Sleep(4 * time.Second)
 	}
 }
 func main() {
@@ -44,7 +42,7 @@ func main() {
 	link := "https://api.tellonym.me/tells/new"
 
 	for i := 0; i < 99; i++ {
-		message := "testing spam lulul final" + strconv.Itoa(i)
+		message := "testing spam lulul final full lol" + strconv.Itoa(i)
 
 		postBody, err := json.Marshal(postReq{IsInstagramInAppBrowser: false, IsSenderRevealed: false, Tell: message, UserId: 82491097, Limit: 99})
 		if err != nil {
