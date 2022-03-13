@@ -11,7 +11,9 @@ import (
 )
 
 func send(link string, responseBody *bytes.Buffer) {
-	resp, err := http.Post(link, "application/json", responseBody)
+	tempres := responseBody
+	templink := link
+	resp, err := http.Post(templink, "application/json", tempres)
 	if err != nil {
 		log.Fatalf("An Error Occured %v", err)
 	}
@@ -26,9 +28,10 @@ func send(link string, responseBody *bytes.Buffer) {
 	if len(sb) > 0 {
 		log.Println("error hui", len(sb))
 		time.Sleep(3 * time.Second)
-		http.Post(link, "application/json", responseBody)
+		send(templink, tempres)
+	} else {
+		time.Sleep(2 * time.Second)
 	}
-	time.Sleep(2 * time.Second)
 }
 func main() {
 	type postReq struct {
