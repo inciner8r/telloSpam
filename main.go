@@ -21,7 +21,7 @@ func main() {
 	link := "https://api.tellonym.me/tells/new"
 
 	for i := 0; i < 99; i++ {
-		message := "test go spam new" + strconv.Itoa(i)
+		message := "testing spam" + strconv.Itoa(i)
 
 		postBody, err := json.Marshal(postReq{IsInstagramInAppBrowser: false, IsSenderRevealed: false, Tell: message, UserId: 82491097, Limit: 99})
 		if err != nil {
